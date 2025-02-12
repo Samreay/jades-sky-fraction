@@ -4,6 +4,7 @@ import httpx
 from loguru import logger
 
 
+# Currently unused as we're going with Pearls first
 def get_goods_segmentation_images() -> dict[str, Path]:
     """Get the segmenetation images from https://archive.stsci.edu/hlsp/jades"""
     here = Path(__file__).parent
@@ -27,3 +28,19 @@ def get_goods_segmentation_images() -> dict[str, Path]:
             f.write(response.content)
 
     return {"goods_s": goods_s_file, "goods_n": goods_n_file}
+
+
+def get_pearls_image() -> Path:
+    """Get the PEARLS segmentation image from https://archive.stsci.edu/hlsp/pearls"""
+    here = Path(__file__).parent
+    pearls_file = here / "data" / "mosaic_nep_nircam_f277w_30mas_20221014_drz.fits"
+
+    if not pearls_file.exists():
+        logger.error(
+            f"You are missing {pearls_file}. Please go to "
+            "https://arizonastateuniversity10.app.box.com/s/79lwrd22s7hou6byjhautqct2a0gmrnm/folder/186306612937 "
+            "and download the mosaic_nep_nircam_f277w_30mas_20221014_drz.fits file to the data directory here"
+        )
+        raise FileNotFoundError(f"Missing {pearls_file}")  # noqa: TRY003
+
+    return pearls_file
